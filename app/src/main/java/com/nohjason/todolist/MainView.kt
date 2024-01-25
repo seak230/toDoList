@@ -1,6 +1,5 @@
 package com.nohjason.todolist
 
-import android.app.LauncherActivity.ListItem
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -30,39 +29,40 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterEnd
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment.Companion.Top
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+@OptIn(ExperimentalComposeUiApi::class)
 @ExperimentalMaterial3Api
 @Composable
 fun MainView(){
-    Column(
-        modifier = Modifier
-            .padding(30.dp)
-            .fillMaxSize()
-            .background(Color.Cyan),
-        verticalArrangement = Arrangement.Center
-    ) {
-        var list by remember { mutableStateOf(emptyList<Int>()) }
-        var textState by remember { mutableStateOf("") }
-        var buttonClick by remember { mutableStateOf(false) }
+    Column {
+        var textState by rememberSaveable { mutableStateOf("") }
+        var buttonClick by rememberSaveable { mutableStateOf(false) }
+        var list by rememberSaveable { mutableStateOf(emptyList<Int>()) }
+        val keyboardController = LocalSoftwareKeyboardController.current
+        val focusManager = LocalFocusManager.current
 
         Row {
             TextField(
                 modifier = Modifier
                     .padding(10.dp)
-                    .fillMaxWidth(0.8f)
-                ,
+                    .fillMaxWidth(0.8f),
                 value = textState,
                 onValueChange = {
                     textState = it
@@ -76,26 +76,16 @@ fun MainView(){
                     .padding(end = 10.dp),
                 enabled = buttonClick,
                 onClick = {
-                    if (textState != ""){
-                        list += 1
-                    }
+                    list += 1
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
                 }) {
 //                Text(text = "nothing")
             }
         }
-        LazyRow {
-//            items(list) {
-//                if (textState != ""){
-//                    Text(
-//                        text = "$textState",
-//                        modifier = Modifier.background(Color.White)
-//                    )
-//                }
-//                }
-            if (buttonClick) {
-                items(list) {
-                    Text(text = "$textState")
-                }
+        LazyColumn {
+            items(list.size) {
+                CardContent(textState)
             }
         }
     }
