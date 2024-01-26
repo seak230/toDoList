@@ -62,16 +62,33 @@ fun MainView(){
     fun addTodo(){ list = list.toMutableList() + textState }
     fun deleteTodo(index: Int){ list = list.toMutableList().also { it.removeAt(index) } }
 
-    Column {
-        TextField(value = textState, onValueChange = {textState = it})
-        Button(onClick = { addTodo() }) {
-            Text(text = "add")
+    Column(modifier = Modifier.padding(20.dp)) {
+        Row {
+            TextField(
+                value = textState,
+                onValueChange = {textState = it},
+                modifier = Modifier
+                    .fillMaxWidth(0.75f)
+                    .align(CenterVertically)
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Button(
+                onClick = { addTodo() },
+                enabled = textState.isNotEmpty(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(CenterVertically)
+            ) {
+                Text(text = "add")
+            }
         }
-
-        LazyColumn {
-            itemsIndexed(
-                list
-            ) { index, item ->
+        Spacer(modifier = Modifier.height(10.dp))
+        LazyColumn(
+            modifier = Modifier
+                .border(1.dp, Color.Black)
+                .fillMaxSize()
+        ) {
+            itemsIndexed(list) { index, item ->
                 Card(list, index = index, delete = { deleteTodo(index) })
             }
         }

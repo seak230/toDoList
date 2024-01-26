@@ -4,10 +4,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,12 +35,10 @@ fun Card(list: List<Any>, index: Int, delete: () -> Unit) {
             .height(100.dp)
     ) {
         Row {
-            Button(onClick = delete) {
-                Text(text = "x")
-            }
-            println("$list $index")
             label = list[index].toString()
             Text(text = "$label")
+            Spacer(modifier = Modifier.width(10.dp))
+            Button(onClick = delete) { Text(text = "x") }
         }
     }
 }
