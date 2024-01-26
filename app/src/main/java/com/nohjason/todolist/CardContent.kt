@@ -16,8 +16,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,26 +43,18 @@ import kotlin.math.round
 
 @Composable
 fun CardContent(title: String){
-    var name by rememberSaveable {
-        mutableStateOf("")
-    }
+    var name by rememberSaveable { mutableStateOf("") }
     var value by rememberSaveable { mutableStateOf(false) }
+
     Row {
         Column(modifier = Modifier
             .fillMaxWidth(0.8f)
             .height(100.dp)
             .padding(10.dp)
-            .background(
-                if (value) {
-                    Color.Black
-                } else {
-                    Color.White
-                }
-            )
+            .background(if (value) { Color.Black } else { Color.White })
+            .align(Alignment.CenterVertically)
         ) {
-            if (name == ""){
-                name = title
-            }
+            if (name == ""){ name = title }
             Text(text = "$name")
             Text(text = "내용")
         }
@@ -66,5 +62,8 @@ fun CardContent(title: String){
             checked = value,
             onCheckedChange = { value = !value }
         )
+        IconButton(onClick = {}) {
+            Icon(Icons.Filled.Close, contentDescription = "Close")
+        }
     }
 }

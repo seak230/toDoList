@@ -3,6 +3,7 @@ package com.nohjason.todolist
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,15 +17,20 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,45 +53,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-@OptIn(ExperimentalComposeUiApi::class)
-@ExperimentalMaterial3Api
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainView(){
-    Column {
-        var textState by rememberSaveable { mutableStateOf("") }
-        var buttonClick by rememberSaveable { mutableStateOf(false) }
-        var list by rememberSaveable { mutableStateOf(emptyList<Int>()) }
-        val keyboardController = LocalSoftwareKeyboardController.current
-        val focusManager = LocalFocusManager.current
+    var list: List<Any> by rememberSaveable { mutableStateOf(listOf()) }
+    var textState by rememberSaveable { mutableStateOf("") }
 
-        Row {
-            TextField(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .fillMaxWidth(0.8f),
-                value = textState,
-                onValueChange = {
-                    textState = it
-                    buttonClick = it.isNotEmpty()
-                }
-            )
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .align(CenterVertically)
-                    .padding(end = 10.dp),
-                enabled = buttonClick,
-                onClick = {
-                    list += 1
-                    keyboardController?.hide()
-                    focusManager.clearFocus()
-                }) {
-//                Text(text = "nothing")
-            }
+    fun addTodo(){ list = list.toMutableList() + textState }
+    fun deleteTodo(index: Int){ list = list.toMutableList().also { it.removeAt(index) } }
+
+    Column {
+        TextField(value = textState, onValueChange = {textState = it})
+        Button(onClick = { addTodo() }) {
+            Text(text = "add")
         }
+
         LazyColumn {
-            items(list.size) {
-                CardContent(textState)
+            itemsIndexed(
+                list
+            ) { index, item ->
+                Card(list, index = index, delete = { deleteTodo(index) })
             }
         }
     }
