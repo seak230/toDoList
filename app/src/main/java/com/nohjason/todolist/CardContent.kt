@@ -39,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.nohjason.todolist.ui.theme.PigmaBlue
 import kotlin.math.round
 
 @Composable
@@ -51,7 +52,7 @@ fun CardContent(title: String){
             .fillMaxWidth(0.8f)
             .height(100.dp)
             .padding(10.dp)
-            .background(if (value) { Color.Black } else { Color.White })
+            .background(PigmaBlue)
             .align(Alignment.CenterVertically)
         ) {
             if (name == ""){ name = title }
