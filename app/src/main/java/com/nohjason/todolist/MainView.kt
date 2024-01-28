@@ -68,10 +68,12 @@ import com.nohjason.todolist.ui.theme.DisableDarkGray
 import com.nohjason.todolist.ui.theme.DisableGray
 import com.nohjason.todolist.ui.theme.PigmaBlue
 import com.nohjason.todolist.ui.theme.White
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainView(){
+    val currentTime : Long = System.currentTimeMillis() // ms로 반환
     var textState by rememberSaveable { mutableStateOf("") }
 
     Box(modifier = Modifier.background(PigmaBlue)){
@@ -87,20 +89,7 @@ fun MainView(){
                     contentDescription = null,
                     modifier = Modifier.size(25.dp)
                 )
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    horizontalAlignment = CenterHorizontally
-                ) {
-                    Text(text = "Jan 2023", fontSize = 30.sp, color = White, fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Box(modifier = Modifier
-                        .height(150.dp)
-                        .width(300.dp)
-                        .background(BackgoundGray, shape = RoundedCornerShape(10.dp))) {
-                        Text(text = "To-do List", modifier = Modifier.padding(10.dp), fontWeight = FontWeight.Bold)
-                    }
-                }
+                Time(currentTime)
             }
             Box(
                 modifier = Modifier
@@ -109,7 +98,7 @@ fun MainView(){
             ){
                 Column(modifier = Modifier.padding(40.dp)) {
                     Row {
-                        Day()
+                        Day(currentTime)
                         Spacer(modifier = Modifier.width(10.dp))
                         TextField(
                             value = textState,
