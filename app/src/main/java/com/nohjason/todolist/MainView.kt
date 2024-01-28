@@ -46,6 +46,7 @@ import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterEnd
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.CenterStart
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Alignment.Companion.Top
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -62,6 +63,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import com.nohjason.todolist.ui.theme.BackgoundGray
 import com.nohjason.todolist.ui.theme.DisableDarkGray
 import com.nohjason.todolist.ui.theme.DisableGray
 import com.nohjason.todolist.ui.theme.PigmaBlue
@@ -70,11 +72,8 @@ import com.nohjason.todolist.ui.theme.White
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainView(){
-    var list: List<Any> by rememberSaveable { mutableStateOf(listOf()) }
     var textState by rememberSaveable { mutableStateOf("") }
 
-    fun addTodo(){ list = list.toMutableList() + textState }
-    fun deleteTodo(index: Int){ list = list.toMutableList().also { it.removeAt(index) } }
     Box(modifier = Modifier.background(PigmaBlue)){
         Column {
             Box(
@@ -90,35 +89,27 @@ fun MainView(){
                 )
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .border(1.dp, Color.Black),
+                        .fillMaxSize(),
+                    horizontalAlignment = CenterHorizontally
                 ) {
                     Text(text = "Jan 2023", fontSize = 30.sp, color = White, fontWeight = FontWeight.Bold)
-//                    Spacer(modifier = Modifier.height(20.dp))
-                    Box(
-                        modifier = Modifier
-                            .background(DisableGray)
-                            .size(100.dp),
-                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Box(modifier = Modifier
+                        .height(150.dp)
+                        .width(300.dp)
+                        .background(BackgoundGray, shape = RoundedCornerShape(10.dp))) {
+                        Text(text = "To-do List", modifier = Modifier.padding(10.dp), fontWeight = FontWeight.Bold)
+                    }
                 }
             }
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Gray, shape = RoundedCornerShape(topStart = 70.dp))
+                    .background(BackgoundGray, shape = RoundedCornerShape(topStart = 70.dp))
             ){
                 Column(modifier = Modifier.padding(40.dp)) {
                     Row {
-                        Box(
-                            modifier = Modifier
-                                .size(60.dp)
-                                .background(PigmaBlue, shape = RoundedCornerShape(10.dp))
-                        ){
-                            Column(modifier = Modifier.align(Center)) {
-                                Text(text = "27", color = White, modifier = Modifier.align(CenterHorizontally), fontSize = 28.sp)
-                                Text(text = "Set", color = White, modifier = Modifier.align(CenterHorizontally), fontSize = 12.sp)
-                            }
-                        }
+                        Day()
                         Spacer(modifier = Modifier.width(10.dp))
                         TextField(
                             value = textState,
@@ -128,32 +119,8 @@ fun MainView(){
                                 .align(Bottom)
                         )
                     }
-
                     Spacer(modifier = Modifier.height(10.dp))
-
-                    Box(modifier = Modifier
-                        .border(1.dp, Color.Black)
-                        .fillMaxSize()) {
-                        LazyColumn {
-                            itemsIndexed(list) { index, item ->
-                                Card(list = list, index = index, delete = { deleteTodo(index) })
-                            }
-                        }
-
-                        Button(
-                            onClick = { addTodo() },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = PigmaBlue,
-                                contentColor = White,
-                                disabledContainerColor = DisableGray,
-                                disabledContentColor = DisableDarkGray
-                            ),
-                            enabled = textState.isNotEmpty(),
-                            modifier = Modifier
-                                .width(300.dp)
-                                .align(BottomCenter),
-                        ) { Text(text = "+", fontSize = 25.sp) }
-                    }
+                    TodoList(textState = textState)
                 }
             }
         }
