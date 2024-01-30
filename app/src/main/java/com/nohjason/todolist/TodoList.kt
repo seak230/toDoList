@@ -24,10 +24,11 @@ import com.nohjason.todolist.ui.theme.DisableGray
 import com.nohjason.todolist.ui.theme.PigmaBlue
 import com.nohjason.todolist.ui.theme.White
 
-
+// Android Room 을 이용해 사용해보자!
+// Context는 LocalContext.current 를 사용해 호출할 수 있다!
 @Composable
 fun TodoList(textState: String){
-    var list: List<Any> by rememberSaveable { mutableStateOf(listOf()) }
+    var list: List<String> by rememberSaveable { mutableStateOf(listOf()) }
 
     fun addTodo(){ list = list.toMutableList() + textState }
     fun deleteTodo(index: Int){ list = list.toMutableList().also { it.removeAt(index) } }

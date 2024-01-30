@@ -1,5 +1,6 @@
 package com.nohjason.todolist
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -14,8 +15,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,13 +28,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.nohjason.todolist.ui.theme.PigmaBlue
 import com.nohjason.todolist.ui.theme.White
 
 @Composable
-fun Card(list: List<Any>, index: Int, delete: () -> Unit) {
+fun Card(list: List<String>, index: Int, delete: () -> Unit) {
     var label by rememberSaveable { mutableStateOf("") }
+    var checked by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(key1 = checked) {
+        Log.d("TAG", "Card: $checked")
+    }
 
     Box(
         modifier = Modifier
@@ -48,16 +56,26 @@ fun Card(list: List<Any>, index: Int, delete: () -> Unit) {
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(10.dp)
             ) {
-                label = list[index].toString()
+                Checkbox(checked = checked, onCheckedChange = { checked = it })
+                label = list[index]
                 Text(
-                    text = "$label",
+                    text = label,
                     modifier = Modifier
                         .weight(1f)
                         .align(Alignment.CenterVertically),
                     color = White,
+                    textDecoration = if (checked){ TextDecoration.LineThrough } else { TextDecoration.None },
                 )
                 Spacer(modifier = Modifier.width(8.dp)) // 적절한 간격으로 조정
-                Button(onClick = delete,) { Text(text = "x") }
+                Button(
+                    onClick = {
+                        label = ""
+                        checked = false
+                        delete()
+                    }
+                ) {
+                    Text(text = "x")
+                }
             }
         }
     }

@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -35,6 +36,7 @@ fun Time(currentTime: Long){
 //    val dataFormat3 = SimpleDateFormat("hh:mm:ss") // 시(1~12) 분 초
 //    val dataFormat4 = SimpleDateFormat("HH:mm:ss") // 시(0~23) 분 초
 //    val dataFormat5 = SimpleDateFormat("현재시각은 \nyyyy-MM-dd \nhh:mm:ss")
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -46,7 +48,7 @@ fun Time(currentTime: Long){
             .height(150.dp)
             .width(300.dp)
             .background(BackgoundGray, shape = RoundedCornerShape(10.dp))) {
-            Text(text = "To-do List", modifier = Modifier.padding(10.dp), fontWeight = FontWeight.Bold)
+            Text(text = "To-do List", modifier = Modifier.padding(10.dp), fontWeight = FontWeight.Bold, color = Color.Black)
         }
     }
 }
