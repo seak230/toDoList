@@ -10,8 +10,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -23,12 +25,28 @@ import com.nohjason.todolist.ui.theme.DisableDarkGray
 import com.nohjason.todolist.ui.theme.DisableGray
 import com.nohjason.todolist.ui.theme.PigmaBlue
 import com.nohjason.todolist.ui.theme.White
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 // Android Room 을 이용해 사용해보자!
 // Context는 LocalContext.current 를 사용해 호출할 수 있다!
+// Main Thread에서 동작을 권장하지 않음.
+// 즉 IO Thread에서 통신 작업을 하고 뷰 작업을 Main Thread로 옮기는 걸 채택.
 @Composable
 fun TodoList(textState: String){
     var list: List<String> by rememberSaveable { mutableStateOf(listOf()) }
+
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(key1 = true) {
+        coroutineScope.launch {
+            withContext(Dispatchers.IO) {
+                // IO Thread내에서 작동함.
+                // room호출
+            }
+        }
+    }
 
     fun addTodo(){ list = list.toMutableList() + textState }
     fun deleteTodo(index: Int){ list = list.toMutableList().also { it.removeAt(index) } }
